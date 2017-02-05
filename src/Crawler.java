@@ -84,6 +84,12 @@ public class Crawler
         Elements locationAges = htmlDocument.select("span[class=\"location-age\"]");
         System.out.println(locationAges.text());
         
+        
+        //Get work history
+        Elements work = htmlDocument.select("span[itemprop=\"worksFor\"]");
+        System.out.println(work.text());
+        
+        
         return bodyText.toLowerCase().contains(searchWord.toLowerCase());
     }
 
