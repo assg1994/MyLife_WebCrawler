@@ -46,11 +46,12 @@ public class Crawler
                 return false;
             }
             //Every link (that is specified with href) on page will be stored them into links list
-            Elements linksOnPage = htmlDocument.select("a[href]");
-            System.out.println("Found (" + linksOnPage.size() + ") links"); 
+            Elements linksOnPage = htmlDocument.select("a[href*=john]");
+            System.out.println("Found (" + linksOnPage.size() + ") links related to the name John Brown"); 
             linksOnPage.stream().forEach((link) ->
             {
                 links.add(link.absUrl("href"));
+                System.out.println(links.toString());
             });
             return true;
         }
@@ -74,8 +75,18 @@ public class Crawler
             return false;
         }
         System.out.println("Searching for the word " + searchWord + "...");
-        String bodyText = this.htmlDocument.body().text();
+        String bodyText = htmlDocument.body().text();
         
+        return bodyText.toLowerCase().contains(searchWord.toLowerCase());
+    }
+    public boolean getData()
+    {
+        //This method should only be used after a successful crawl of the current document.
+        if(this.htmlDocument == null)
+        {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return false;
+        }
         //Get names related to John Brown
         Elements names = htmlDocument.select("h2[itemprop=\"name\"]");
         System.out.println(names.text());
@@ -89,8 +100,7 @@ public class Crawler
         Elements work = htmlDocument.select("span[itemprop=\"worksFor\"]");
         System.out.println(work.text());
         
-        
-        return bodyText.toLowerCase().contains(searchWord.toLowerCase());
+        return true;
     }
 
     public List<String> getLinks()

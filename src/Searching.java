@@ -28,7 +28,9 @@ public class Searching
      */
     public void search(String url, String searchWord)
     {
-        while (pagesVisited.size() < MAX_PAGES_TO_SEARCH)
+        Crawler cr = new Crawler();
+        cr.crawl(url);
+        /*while (pagesVisited.size() < MAX_PAGES_TO_SEARCH)
         {
             String currentUrl;
             Crawler cr = new Crawler();
@@ -42,14 +44,22 @@ public class Searching
                 currentUrl = this.nextUrl();
             }
             cr.crawl(currentUrl);
-            boolean success = cr.searchForWord(searchWord);
-            if (success)
+            boolean success = cr.searchForWord(searchWord);          
+            //if (success)
+            //{
+            //    System.out.println(String.format("--Success-- Word %s found at %s", searchWord, currentUrl));
+            //    break;
+            //}
+            
+            boolean done = cr.getData();
+            if (done)
             {
-                System.out.println(String.format("--Success-- Word %s found at %s", searchWord, currentUrl));
-                break;
+                System.out.println("Data successfully collected");
+                //break;
             }
             pagesToVisit.addAll(cr.getLinks());
         }
+        */
         System.out.println("\n--Done-- Visited " + pagesVisited.size() + " web page(s)");
     }
 
