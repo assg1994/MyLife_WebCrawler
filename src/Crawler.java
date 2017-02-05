@@ -76,6 +76,10 @@ public class Crawler
         System.out.println("Searching for the word " + searchWord + "...");
         String bodyText = this.htmlDocument.body().text();
         
+        //Get names related to John Brown
+        Elements names = htmlDocument.select("h2[itemprop=\"name\"]");
+        System.out.println(names.text());
+        
         //Get location and age for every 'John Brown'
         Elements locationAges = htmlDocument.select("span[class=\"location-age\"]");
         System.out.println(locationAges.text());
