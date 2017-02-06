@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 import org.jsoup.Connection;
@@ -21,6 +22,7 @@ public class Crawler
     // We will use a fake USER_AGENT so the web server thinks the robot is a normal web browser.
     private static final String USER_AGENT ="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
     private List<String> links = new LinkedList<String>();
+    private String nextLink=null;
     private Document htmlDocument;
 
 
@@ -45,14 +47,25 @@ public class Crawler
                 System.out.println("--Failure-- Retrieved something other than HTML");
                 return false;
             }
-            //Every link (that is specified with href) on page will be stored them into links list
+            //Every link (that is specified with href) on page will be stored them into links list (need only the last link of "Next" button)
             Elements linksOnPage = htmlDocument.select("a[href*=john]");
-            System.out.println("Found (" + linksOnPage.size() + ") links related to the name John Brown"); 
-            linksOnPage.stream().forEach((link) ->
+            System.out.println("Found (" + linksOnPage.size() + ") links related to the name John Brown");
+            
+            //The variable nextLink will be used every time to retrieve all wanted profile data 
+            //incrementing pages like https://www.mylife.com/john-brown/2/.... to https://www.mylife.com/john-brown/150/....
+            
+            nextLink=linksOnPage.last().absUrl("href");
+            nextLink=nextLink.replaceAll("\\s", "");//This character replacement using ReGex is used because in HTML page some links have these whitespaces between characters          
+            
+            //links.add(linksOnPage.last().absUrl("href"));
+            
+            //Printing method to check that we get all proper links
+            /*linksOnPage.stream().forEach((link) ->
             {
                 links.add(link.absUrl("href"));
                 System.out.println(links.toString());
-            });
+            });*/
+            
             return true;
         }
         catch(IOException ioe)
@@ -105,6 +118,11 @@ public class Crawler
 
     public List<String> getLinks()
     {
-        return this.links;
+        return links;
+    }
+    
+    public String getNextLink()
+    {
+        return nextLink;
     }
 }
