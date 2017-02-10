@@ -64,16 +64,23 @@ public class Searching
         {
             
             DB db = new DB();
-            for(int i=0;i<150;i++)
+            for(int i=0;i<3000;i++)
             {
                 String sql = "INSERT INTO profiles (name, city, state, age, work) VALUES " + "(?,?,?,?,?);";
                 PreparedStatement stmt = db.conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                stmt.setString(1, Crawler.names.get(i));
-                stmt.setString(2, Crawler.city.get(i));
-                stmt.setString(3, Crawler.state.get(i));
-                stmt.setString(4, Crawler.age.get(i));
-                stmt.setString(5, Crawler.work.get(i));
-                stmt.execute();
+                try
+                {
+                    stmt.setString(1, Crawler.names.get(i));
+                    stmt.setString(2, Crawler.city.get(i));
+                    stmt.setString(3, Crawler.state.get(i));
+                    stmt.setString(4, Crawler.age.get(i));
+                    stmt.setString(5, Crawler.work.get(i));
+                    stmt.execute();
+                }
+                catch(IndexOutOfBoundsException ex)
+                {
+                    ex.printStackTrace();
+                }
             }
             System.out.println("All data inserted");
         }

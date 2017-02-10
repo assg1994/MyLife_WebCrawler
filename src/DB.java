@@ -20,7 +20,7 @@ public class DB
         {
             Class.forName("org.postgresql.Driver");
             String url = "jdbc:postgresql://localhost:5432/MyLifeProfileData";
-            conn = DriverManager.getConnection(url, "---user here---", "---password here---");
+            conn = DriverManager.getConnection(url, "george", "Databases3Project5");
             System.out.println("conn built");
         }
         catch (SQLException e)

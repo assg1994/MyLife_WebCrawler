@@ -117,20 +117,41 @@ public class Crawler
         System.out.println(locationAges.text());
 
         //Get work history
-        Elements works = htmlDocument.select("span[itemprop=\"worksFor\"]");
-        System.out.println(works.text());
-
+        //(Made this because every li in HTML code definetly has one <h5> for education/work and because sometimes <span itemprop=".."> does not exist if theres no such data, 
+        //and this caused problems with the number of records that were collected (usually smaller).So we used <h5> to be more accurate.)
+        Elements h5=htmlDocument.select("h5");
+        h5.stream().forEach((el)->
+        {
+          if(el.text().equals("EDUCATION / WORK HISTORY"))//Choose the element with this text sto be sure that whe are looking for jobs
+          {
+              //Here are the checks for the work data by checking the HTML elements for each purpose (<br> is used in every if we have education data also)
+              if(el.siblingElements()!=null && el.siblingElements().toString().contains("<br>") && el.siblingElements().toString().contains("<span itemprop=\"worksFor\""))
+              {
+                  this.work.add(el.siblingElements().get(1).text());
+                  System.out.println(el.siblingElements().get(1).text());  
+              }
+              else if(el.siblingElements()!=null && el.siblingElements().toString().contains("<span itemprop=\"worksFor\"")) 
+              {                 
+                  this.work.add(el.siblingElements().get(0).text());
+                  System.out.println(el.siblingElements().get(0).text());                
+              }   
+              else
+              {
+                  this.work.add(" ");
+              }
+          }
+        });
         names.stream().forEach((name)-> 
         {
                 this.names.add(name.text());
                 //System.out.println(this.names.toString());
         });
 
-        works.stream().forEach((work)-> 
+        /*works.stream().forEach((work)-> 
         {
                 this.work.add(work.text());
                 //System.out.println(this.work.toString());
-        });
+        });*/
 
         locationAges.stream().forEach((locationAge)-> 
         {
@@ -145,7 +166,7 @@ public class Crawler
                 catch(ArrayIndexOutOfBoundsException ex)
                 {
                     System.out.println("No city provided");
-                    this.age.add("");
+                    this.city.add(" ");
                 }
                 
                 try
@@ -155,7 +176,7 @@ public class Crawler
                 catch(ArrayIndexOutOfBoundsException ex)
                 {
                     System.out.println("No state provided");
-                    this.age.add("");
+                    this.state.add(" ");
                 }
                 
                 try
@@ -165,7 +186,7 @@ public class Crawler
                 catch(ArrayIndexOutOfBoundsException ex)
                 {
                     System.out.println("No age provided");
-                    this.age.add("");
+                    this.age.add(" ");
                 }
                
                 
